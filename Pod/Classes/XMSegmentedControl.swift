@@ -97,6 +97,16 @@ public class XMSegmentedControl: UIView {
             self.update()
         }
     }
+
+
+    /**
+     Sets the image insets for the titles.
+     */
+    public var titleInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0) {
+        didSet {
+            self.update()
+        }
+    }
     
     /**
      Sets the segmented control content type to `Icon` and uses the content of the array to create the segments.
@@ -289,7 +299,7 @@ public class XMSegmentedControl: UIView {
                 case .Hybrid:
                     let insetAmount: CGFloat = 8 / 2.0
                     tab.imageEdgeInsets = UIEdgeInsetsMake(12, -insetAmount, 12, insetAmount)
-                    tab.titleEdgeInsets = UIEdgeInsetsMake(0, insetAmount*2, 0, 0)
+                    tab.titleEdgeInsets = titleInsets
                     tab.contentEdgeInsets = UIEdgeInsetsMake(0, insetAmount, 0, insetAmount)
                     tab.contentHorizontalAlignment = .Center
                     tab.setTitle(segmentContent.text[i], forState: .Normal)
