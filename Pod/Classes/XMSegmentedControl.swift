@@ -128,6 +128,16 @@ public class XMSegmentedControl: UIView {
             self.update()
         }
     }
+
+    /**
+     Whether or not icons are resized before being used in Hybrid mode.
+     - Note: If you don't want your icons resized, you _must_ set this
+     _before_ providing the icons via segmentContent. By default, resizing
+     is enabled. This means you can't disable resizing when using one of
+     the convenience initializers at the moment. I wanted to provide this
+     option without cluttering up the initializers.
+    */
+    public var resizeContentIcons: Bool = true
     
     /**
      Sets the segmented control content type to `Hybrid` (i.e. displaying icons and text) and uses the content of the tuple to create the segments.
@@ -152,7 +162,9 @@ public class XMSegmentedControl: UIView {
                 segmentContent.icon = segmentContent.icon
             }
 
-            segmentContent.icon = segmentContent.icon.map(resizeImage)
+            if resizeContentIcons {
+                segmentContent.icon = segmentContent.icon.map(resizeImage)
+            }
 
             contentType = .Hybrid
             self.update()
