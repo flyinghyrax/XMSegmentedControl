@@ -119,6 +119,15 @@ public class XMSegmentedControl: UIView {
             self.update()
         }
     }
+
+    /**
+     Sets the image insets for the icons.
+    */
+    public var iconInsets: UIEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12) {
+        didSet {
+            self.update()
+        }
+    }
     
     /**
      Sets the segmented control content type to `Hybrid` (i.e. displaying icons and text) and uses the content of the tuple to create the segments.
@@ -288,7 +297,7 @@ public class XMSegmentedControl: UIView {
                 
                 switch contentType {
                 case .Icon:
-                    tab.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+                    tab.imageEdgeInsets = iconInsets
                     tab.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
                     tab.tintColor = i == selectedSegment ? highlightTint : tint
                     tab.setImage(segmentIcon[i], forState: .Normal)
@@ -298,7 +307,7 @@ public class XMSegmentedControl: UIView {
                     tab.titleLabel?.font = font
                 case .Hybrid:
                     let insetAmount: CGFloat = 8 / 2.0
-                    tab.imageEdgeInsets = UIEdgeInsetsMake(12, -insetAmount, 12, insetAmount)
+                    tab.imageEdgeInsets = iconInsets
                     tab.titleEdgeInsets = titleInsets
                     tab.contentEdgeInsets = UIEdgeInsetsMake(0, insetAmount, 0, insetAmount)
                     tab.contentHorizontalAlignment = .Center
