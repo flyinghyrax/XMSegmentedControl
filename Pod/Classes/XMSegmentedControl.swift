@@ -138,6 +138,15 @@ public class XMSegmentedControl: UIView {
      option without cluttering up the initializers.
     */
     public var resizeContentIcons: Bool = true
+
+    /**
+     Set the border color and width of the segments.
+    */
+    public var segmentBorders: (color: UIColor, width: CGFloat) = (UIColor.clearColor(), 0) {
+        didSet {
+            self.update()
+        }
+    }
     
     /**
      Sets the segmented control content type to `Hybrid` (i.e. displaying icons and text) and uses the content of the tuple to create the segments.
@@ -306,6 +315,9 @@ public class XMSegmentedControl: UIView {
                 let frame = CGRect(x: starting + (CGFloat(i) * width), y: 0, width: width, height: height)
                 let tab = UIButton(type: UIButtonType.System)
                 tab.frame = frame
+
+                tab.layer.borderColor = segmentBorders.color.CGColor
+                tab.layer.borderWidth = segmentBorders.width
                 
                 switch contentType {
                 case .Icon:
