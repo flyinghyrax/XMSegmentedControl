@@ -8,14 +8,14 @@
 
 Pod::Spec.new do |s|
   s.name             = "XMSegmentedControl"
-  s.version          = "0.1.4"
+  s.version          = "1.0.0-alpha.1"
   s.summary          = "A customizable segmented control with Icons, Text or Icons + Text segments."
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
 #   * Try to keep it short, snappy and to the point.
 #   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!  
+#   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description      = <<-DESC
                         This pod allows creating a segmented control with Icons, Text or Icons + Text segments. It is fully customizable and supports several in-built styles for displaying the selected segment.
                        DESC
