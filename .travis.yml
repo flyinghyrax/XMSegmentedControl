@@ -15,5 +15,11 @@ xcode_sdk: iphonesimulator10.0
 install:
 - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
 script:
-- set -o pipefail && xcodebuild test -workspace Example/XMSegmentedControl.xcworkspace -scheme XMSegmentedControl-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
+- >
+  set -o pipefail && xcodebuild clean test
+  -workspace Example/XMSegmentedControl.xcworkspace
+  -scheme XMSegmentedControl-Example
+  -sdk iphonesimulator
+  -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.0'
+  ONLY_ACTIVE_ARCH=NO | xcpretty -c
 - pod lib lint --quick
