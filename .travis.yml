@@ -2,8 +2,11 @@
 # * http://www.objc.io/issue-6/travis-ci.html
 # * https://github.com/supermarin/xcpretty#usage
 
-osx_image: xcode7.3
+osx_image: xcode8
 language: objective-c
+xcode_sdk: iphonesimulator10.0
+#xcode_workspace: Example/XMSegmentedControl.xcworkspace
+#xcode_scheme: XMSegmentedControl-Example
 # cache: cocoapods
 # podfile: Example/Podfile
 # before_install:
@@ -12,5 +15,11 @@ language: objective-c
 install:
 - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
 script:
-- set -o pipefail && xcodebuild test -workspace Example/XMSegmentedControl.xcworkspace -scheme XMSegmentedControl-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
+- >
+  set -o pipefail && xcodebuild clean test
+  -workspace Example/XMSegmentedControl.xcworkspace
+  -scheme XMSegmentedControl-Example
+  -sdk iphonesimulator
+  -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.0'
+  ONLY_ACTIVE_ARCH=NO | xcpretty -c
 - pod lib lint --quick
