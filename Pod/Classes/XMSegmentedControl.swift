@@ -12,7 +12,7 @@ import UIKit
 ///The delegate of `XMSegmentedControl` must adopt `XMSegmentedControlDelegate` protocol. It allows retrieving information on which segment was tapped.
 public protocol XMSegmentedControlDelegate {
     /// Tells the delegate that a specific segment is now selected.
-    func xmSegmentedControl(xmSegmentedControl: XMSegmentedControl, selectedSegment: Int)
+    func xmSegmentedControl(_ xmSegmentedControl: XMSegmentedControl, selectedSegment: Int)
 }
 
 /**
@@ -22,9 +22,9 @@ public protocol XMSegmentedControlDelegate {
  - BottomEdge: The bottom edge of the selected segmenet is highlighted.
  */
 public enum XMSelectedItemHighlightStyle {
-    case Background
-    case TopEdge
-    case BottomEdge
+    case background
+    case topEdge
+    case bottomEdge
 }
 
 /**
@@ -35,10 +35,10 @@ public enum XMSelectedItemHighlightStyle {
  - HybridVertical: The segmented control displays icons and text in vertical arrangement.
  */
 public enum XMContentType {
-    case Text
-    case Icon
-    case Hybrid
-    case HybridVertical
+    case text
+    case icon
+    case hybrid
+    case hybridVertical
 }
 
 /**
@@ -48,39 +48,39 @@ public enum XMContentType {
  - Flexible: The segmented control item has a width equal to `totalWidth / segmentCount`
  */
 public enum XMSegmentItemWidthDistribution {
-    case Fixed
-    case HalfFixed
-    case Flexible
+    case fixed
+    case halfFixed
+    case flexible
 }
 
 @IBDesignable
-public class XMSegmentedControl: UIView {
+open class XMSegmentedControl: UIView {
 
-    public var delegate: XMSegmentedControlDelegate?
+    open var delegate: XMSegmentedControlDelegate?
     private var highlightView: UIView!
     
     /**
      Defines the height of the highlighted edge if `selectedItemHighlightStyle` is either `TopEdge` or `BottomEdge`
      - Note: Changes only take place if `selectedItemHighlightStyle` is either `TopEdge` or `BottomEdge`
      */
-    public var edgeHighlightHeight: CGFloat = 5.0
+    open var edgeHighlightHeight: CGFloat = 5.0
     
     /// Changes the background of the selected segment.
-    @IBInspectable public var highlightColor = UIColor(red: 42/255, green: 132/255, blue: 210/255, alpha: 1) {
+    @IBInspectable open var highlightColor = UIColor(red: 42/255, green: 132/255, blue: 210/255, alpha: 1) {
         didSet {
             self.update()
         }
     }
     
     /// Changes the font color or the icon tint color for the segments.
-    @IBInspectable public var tint = UIColor.whiteColor() {
+    @IBInspectable open var tint = UIColor.white {
         didSet {
             self.update()
         }
     }
     
     /// Changes the font color or the icon tint for the selected segment.
-    @IBInspectable public var highlightTint = UIColor.whiteColor() {
+    @IBInspectable open var highlightTint = UIColor.white {
         didSet {
             self.update()
         }
@@ -90,10 +90,10 @@ public class XMSegmentedControl: UIView {
      Sets the segmented control content type to `Text` and uses the content of the array to create the segments.
      - Note: Only six elements will be displayed.
      */
-    public var segmentTitle: [String] = []{
+    open var segmentTitle: [String] = [] {
         didSet {
             segmentTitle = segmentTitle.count > 6 ? Array(segmentTitle[0..<6]) : segmentTitle
-            contentType = .Text
+            contentType = .text
             self.update()
         }
     }
@@ -102,7 +102,7 @@ public class XMSegmentedControl: UIView {
     /**
      Sets the image insets for the titles.
      */
-    public var titleInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0) {
+    open var titleInsets: UIEdgeInsets = UIEdgeInsets.zero {
         didSet {
             self.update()
         }
@@ -112,10 +112,10 @@ public class XMSegmentedControl: UIView {
      Sets the segmented control content type to `Icon` and uses the content of the array to create the segments.
      - Note: Only six elements will be displayed.
      */
-    public var segmentIcon: [UIImage] = []{
+    open var segmentIcon: [UIImage] = [] {
         didSet {
             segmentIcon = segmentIcon.count > 6 ? Array(segmentIcon[0..<6]) : segmentIcon
-            contentType = .Icon
+            contentType = .icon
             self.update()
         }
     }
@@ -123,7 +123,7 @@ public class XMSegmentedControl: UIView {
     /**
      Sets the image insets for the icons.
     */
-    public var iconInsets: UIEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12) {
+    open var iconInsets: UIEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12) {
         didSet {
             self.update()
         }
@@ -137,12 +137,12 @@ public class XMSegmentedControl: UIView {
      the convenience initializers at the moment. I wanted to provide this
      option without cluttering up the initializers.
     */
-    public var resizeContentIcons: Bool = true
+    open var resizeContentIcons: Bool = true
 
     /**
      Set the border color and width of the segments.
     */
-    public var segmentBorders: (color: UIColor, width: CGFloat) = (UIColor.clearColor(), 0) {
+    open var segmentBorders: (color: UIColor, width: CGFloat) = (UIColor.clear, 0) {
         didSet {
             self.update()
         }
@@ -152,7 +152,7 @@ public class XMSegmentedControl: UIView {
      Sets the segmented control content type to `Hybrid` (i.e. displaying icons and text) and uses the content of the tuple to create the segments.
      - Note: Only six elements will be displayed.
      */
-    public var segmentContent: (text: [String], icon: [UIImage]) = ([], []) {
+    open var segmentContent: (text: [String], icon: [UIImage]) = ([], []) {
         didSet {
             guard segmentContent.text.count == segmentContent.icon.count else {
                 print("Text and Icon arrays out of sync.")
@@ -175,7 +175,7 @@ public class XMSegmentedControl: UIView {
                 segmentContent.icon = segmentContent.icon.map(resizeImage)
             }
 
-            contentType = .Hybrid
+            contentType = .hybrid
             self.update()
         }
     }
@@ -185,23 +185,23 @@ public class XMSegmentedControl: UIView {
      - Note: Only six elements will be displayed.
      */
 
-    public func setupVerticalSegmentContent(content: (text: [String], icon: [UIImage])) {
+    open func setupVerticalSegmentContent(_ content: (text: [String], icon: [UIImage])) {
         segmentContent = content
 
-        contentType = .HybridVertical
+        contentType = .hybridVertical
         self.update()
     }
 
 
     /// The segment index of the selected item. When set it animates the current highlight to the button with index = selectedSegment.
-    public var selectedSegment: Int = 0 {
+    open var selectedSegment: Int = 0 {
         didSet {
-            func isUIButton(view: UIView) -> Bool {
+            func isUIButton(_ view: UIView) -> Bool {
                 return view is UIButton ? true : false
             }
-            UIView.animateWithDuration(0.3, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: UIViewAnimationOptions.curveEaseOut, animations: {
                 switch(self.contentType) {
-                case .Icon, .Hybrid, .HybridVertical:
+                case .icon, .hybrid, .hybridVertical:
                     ((self.subviews.filter(isUIButton)) as! [UIButton]).forEach {
                         if $0.tag == self.selectedSegment {
                             $0.tintColor = self.highlightTint
@@ -210,13 +210,13 @@ public class XMSegmentedControl: UIView {
                             $0.tintColor = self.tint
                         }
                     }
-                case .Text:
+                case .text:
                     ((self.subviews.filter(isUIButton)) as! [UIButton]).forEach {
                         if $0.tag == self.selectedSegment {
-                            $0.setTitleColor(self.highlightTint, forState: .Normal)
+                            $0.setTitleColor(self.highlightTint, for: UIControlState())
                             self.highlightView.frame.origin.x = $0.frame.origin.x
                         } else {
-                            $0.setTitleColor(self.tint, forState: .Normal)
+                            $0.setTitleColor(self.tint, for: UIControlState())
                         }
                     }
                 }
@@ -230,16 +230,16 @@ public class XMSegmentedControl: UIView {
      Sets the font for the text displayed in the segmented control if `contentType` is `Text`
      - Note: Changes only take place if `contentType` is `Text`
      */
-    public var font = UIFont(name: "AvenirNext-DemiBold", size: 15)!
+    open var font = UIFont(name: "AvenirNext-DemiBold", size: 15)!
     
     /// Sets the segmented control selected item highlight style to `Background`, `TopEdge` or `BottomEdge`.
-    public var selectedItemHighlightStyle: XMSelectedItemHighlightStyle = .Background
+    open var selectedItemHighlightStyle: XMSelectedItemHighlightStyle = .background
     
     /// Sets the segmented control content type to `Text` or `Icon`
-    public var contentType: XMContentType = .Text
+    open var contentType: XMContentType = .text
 
     /// Sets the segmented control item width distribution to `Fixed`, `HalfFixed` or `Flexible`
-    public var itemWidthDistribution:XMSegmentItemWidthDistribution = .Flexible
+    open var itemWidthDistribution:XMSegmentItemWidthDistribution = .flexible
     
     /// Initializes and returns a newly allocated XMSegmentedControl object with the specified frame rectangle. It sets the segments of the control from the given `segmentTitle` array and the highlight style for the selected item.
     public init (frame: CGRect, segmentTitle: [String], selectedItemHighlightStyle: XMSelectedItemHighlightStyle) {
@@ -273,7 +273,7 @@ public class XMSegmentedControl: UIView {
     }
     
     /// Common initializer.
-    private func commonInit(data: Any, highlightStyle: XMSelectedItemHighlightStyle) {
+    private func commonInit(_ data: Any, highlightStyle: XMSelectedItemHighlightStyle) {
         if let segmentTitle = data as? [String] {
             self.segmentTitle = segmentTitle
         } else if let segmentIcon = data as? [UIImage] {
@@ -299,48 +299,48 @@ public class XMSegmentedControl: UIView {
     }
     
     /// Prepares the render of the view for the Storyboard.
-    override public func prepareForInterfaceBuilder() {
+    override open func prepareForInterfaceBuilder() {
         segmentTitle = ["Only", "For", "Show"]
         backgroundColor = UIColor(red: 45/255, green: 62/255, blue: 100/255, alpha: 1)
     }
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         self.update()
     }
     
     /// Forces the segmented control to reload.
-    public func update() {
+    open func update() {
         func addSegments(startingPosition starting: CGFloat, sections: Int, width: CGFloat, height: CGFloat) {
-            for (var i = 0; i < sections; i++) {
+            for i in 0 ..< sections {
                 let frame = CGRect(x: starting + (CGFloat(i) * width), y: 0, width: width, height: height)
-                let tab = UIButton(type: UIButtonType.System)
+                let tab = UIButton(type: UIButtonType.system)
                 tab.frame = frame
 
-                tab.layer.borderColor = segmentBorders.color.CGColor
+                tab.layer.borderColor = segmentBorders.color.cgColor
                 tab.layer.borderWidth = segmentBorders.width
                 
                 switch contentType {
-                case .Icon:
+                case .icon:
                     tab.imageEdgeInsets = iconInsets
-                    tab.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+                    tab.imageView?.contentMode = UIViewContentMode.scaleAspectFit
                     tab.tintColor = i == selectedSegment ? highlightTint : tint
-                    tab.setImage(segmentIcon[i], forState: .Normal)
-                case .Text:
-                    tab.setTitle(segmentTitle[i], forState: .Normal)
-                    tab.setTitleColor(i == selectedSegment ? highlightTint : tint, forState: .Normal)
+                    tab.setImage(segmentIcon[i], for: UIControlState())
+                case .text:
+                    tab.setTitle(segmentTitle[i], for: UIControlState())
+                    tab.setTitleColor(i == selectedSegment ? highlightTint : tint, for: UIControlState())
                     tab.titleLabel?.font = font
-                case .Hybrid:
+                case .hybrid:
                     let insetAmount: CGFloat = 8 / 2.0
                     tab.imageEdgeInsets = iconInsets
                     tab.titleEdgeInsets = titleInsets
                     tab.contentEdgeInsets = UIEdgeInsetsMake(0, insetAmount, 0, insetAmount)
-                    tab.contentHorizontalAlignment = .Center
-                    tab.setTitle(segmentContent.text[i], forState: .Normal)
-                    tab.setImage(segmentContent.icon[i], forState: .Normal)
+                    tab.contentHorizontalAlignment = .center
+                    tab.setTitle(segmentContent.text[i], for: UIControlState())
+                    tab.setImage(segmentContent.icon[i], for: UIControlState())
                     tab.titleLabel?.font = font
-                    tab.imageView?.contentMode = .ScaleAspectFit
+                    tab.imageView?.contentMode = .scaleAspectFit
                     tab.tintColor = i == selectedSegment ? highlightTint : tint
-                case .HybridVertical:
+                case .hybridVertical:
                     let insetAmount: CGFloat = 8 / 2.0
                     let bottomTitleInset: CGFloat = 20
 
@@ -351,27 +351,27 @@ public class XMSegmentedControl: UIView {
                     tab.imageEdgeInsets = UIEdgeInsetsMake(insetAmount*2, horizontalInset, height - imageSize.height + insetAmount, horizontalInset)
                     tab.titleEdgeInsets = UIEdgeInsetsMake(height - bottomTitleInset, -imageSize.width / 2, insetAmount*2, imageSize.width / 2)
                     tab.contentEdgeInsets = UIEdgeInsetsMake(0, insetAmount, 0, insetAmount)
-                    tab.contentHorizontalAlignment = .Center
-                    tab.setTitle(segmentContent.text[i], forState: .Normal)
-                    tab.setImage(image, forState: .Normal)
+                    tab.contentHorizontalAlignment = .center
+                    tab.setTitle(segmentContent.text[i], for: UIControlState())
+                    tab.setImage(image, for: UIControlState())
                     tab.titleLabel?.font = UIFont(name: font.fontName, size: font.pointSize / 2.0)
-                    tab.imageView?.contentMode = .ScaleAspectFit
+                    tab.imageView?.contentMode = .scaleAspectFit
                     tab.tintColor = i == selectedSegment ? highlightTint : tint
                 }
                 
                 tab.tag = i
-                tab.addTarget(self, action: "segmentPressed:", forControlEvents: .TouchUpInside)
+                tab.addTarget(self, action: #selector(XMSegmentedControl.segmentPressed(_:)), for: .touchUpInside)
                 self.addSubview(tab)
             }
         }
         
         func addHighlightView(startingPosition starting: CGFloat, width: CGFloat) {
             switch selectedItemHighlightStyle {
-            case .Background:
+            case .background:
                 highlightView = UIView(frame: CGRect(x: starting, y: 0, width: width, height: frame.height))
-            case .TopEdge:
+            case .topEdge:
                 highlightView = UIView(frame: CGRect(x: starting, y: 0, width: width, height: edgeHighlightHeight))
-            case .BottomEdge:
+            case .bottomEdge:
                 highlightView = UIView(frame: CGRect(x: starting, y: frame.height - edgeHighlightHeight, width: width, height: edgeHighlightHeight))
             }
 
@@ -382,15 +382,15 @@ public class XMSegmentedControl: UIView {
         (subviews as [UIView]).forEach { $0.removeFromSuperview() }
         let totalWidth = frame.width
 
-        func startingPositionAndWidth(totalWidth: CGFloat, distribution: XMSegmentItemWidthDistribution, segmentCount: Int, selectedIndex: Int) -> (startingPosition: CGFloat, sectionWidth: CGFloat) {
+        func startingPositionAndWidth(_ totalWidth: CGFloat, distribution: XMSegmentItemWidthDistribution, segmentCount: Int, selectedIndex: Int) -> (startingPosition: CGFloat, sectionWidth: CGFloat) {
 
             switch distribution {
-            case .Fixed:
+            case .fixed:
                 let width = totalWidth / 6
                 let availableSpace = totalWidth - (width * CGFloat(segmentCount))
                 let position = (totalWidth - availableSpace) / 2
                 return (position, width)
-            case .HalfFixed:
+            case .halfFixed:
                 var width = totalWidth / 4
                 if segmentCount > 2 {
                     width = totalWidth / 6
@@ -399,14 +399,14 @@ public class XMSegmentedControl: UIView {
                 let availableSpace = totalWidth - (width * CGFloat(segmentCount))
                 let position = (totalWidth - availableSpace) / 2
                 return (position, width)
-            case .Flexible:
+            case .flexible:
                 let width = totalWidth / CGFloat(segmentCount)
                 let position = CGFloat(selectedIndex) * width
                 return (position, width)
             }
         }
 
-        if contentType == .Text {
+        if contentType == .text {
             guard segmentTitle.count > 0 else {
                 print("segment titles (segmentTitle) are not set")
                 return
@@ -416,17 +416,17 @@ public class XMSegmentedControl: UIView {
             let sectionWidth = totalWidth / CGFloat(tabBarSections)
             addHighlightView(startingPosition: CGFloat(selectedSegment) * sectionWidth, width: sectionWidth)
             addSegments(startingPosition: 0, sections: tabBarSections, width: sectionWidth, height: frame.height)
-        } else if contentType == .Icon {
+        } else if contentType == .icon {
             let tabBarSections:Int = segmentIcon.count
             let positionWidth = startingPositionAndWidth(totalWidth, distribution: itemWidthDistribution, segmentCount: tabBarSections, selectedIndex: selectedSegment)
             addHighlightView(startingPosition: positionWidth.startingPosition, width: positionWidth.sectionWidth)
             addSegments(startingPosition: positionWidth.startingPosition, sections: tabBarSections, width: positionWidth.sectionWidth, height: self.frame.height)
-        } else if contentType == .Hybrid {
+        } else if contentType == .hybrid {
             let tabBarSections:Int = segmentContent.text.count
             let positionWidth = startingPositionAndWidth(totalWidth, distribution: itemWidthDistribution, segmentCount: tabBarSections, selectedIndex: selectedSegment)
             addHighlightView(startingPosition: positionWidth.startingPosition, width: positionWidth.sectionWidth)
             addSegments(startingPosition: 0, sections: tabBarSections, width: positionWidth.sectionWidth, height: self.frame.height)
-        } else if contentType == .HybridVertical {
+        } else if contentType == .hybridVertical {
             let tabBarSections:Int = segmentContent.text.count
             let positionWidth = startingPositionAndWidth(totalWidth, distribution: itemWidthDistribution, segmentCount: tabBarSections, selectedIndex: selectedSegment)
             addHighlightView(startingPosition: positionWidth.startingPosition, width: positionWidth.sectionWidth)
@@ -435,13 +435,13 @@ public class XMSegmentedControl: UIView {
     }
     
     /// Called whenever a segment is pressed. Sends the information to the delegate.
-    @objc private func segmentPressed(sender: UIButton) {
+    @objc private func segmentPressed(_ sender: UIButton) {
         selectedSegment = sender.tag
         delegate?.xmSegmentedControl(self, selectedSegment: selectedSegment)
     }
     
     /// Press indexed tab
-    public func pressTabWithIndex(index: Int) {
+    open func pressTabWithIndex(_ index: Int) {
         for subview in self.subviews where subview.tag == index {
             if subview is UIButton {
                 segmentPressed(subview as! UIButton)
@@ -451,14 +451,14 @@ public class XMSegmentedControl: UIView {
     }
     
     /// Scales an Image to the size provided. It takes into account alpha. And it uses the screen's scale to resize.
-    private func resizeImage(image:UIImage) -> UIImage {
+    private func resizeImage(_ image:UIImage) -> UIImage {
         let maxSize = CGSize(width: frame.height / 2, height: frame.height / 2)
         let ratio = image.size.width / image.size.height
         let size = CGSize(width: maxSize.width*ratio, height: maxSize.height)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        image.drawInRect(CGRect(origin: CGPointZero, size: size))
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return scaledImage
+        return scaledImage!
     }
 }
